@@ -27,6 +27,7 @@ class User extends Authenticatable
         'email',
         'password',
         'empleado_id',
+        'cliente_id',
 
     ];
 
@@ -60,6 +61,11 @@ class User extends Authenticatable
             return $this->belongsTo(Empleado::class, 'empleado_id');
         }
     
+        // Relación con el modelo Cliente
+        public function cliente()
+        {
+            return $this->belongsTo(Cliente::class, 'cliente_id');
+        }
 
 
 }

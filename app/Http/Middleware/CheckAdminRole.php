@@ -19,7 +19,7 @@ class CheckAdminRole
             $user = auth()->user();
 
             // Si el usuario es "user", solo puede entrar a /usuario
-            if ($user->hasRole('user') && !$request->is('usuario')) {
+            if ($user->hasRole('panel_user') && !$request->is('usuario')) {
                 return redirect('/usuario');
             }
 

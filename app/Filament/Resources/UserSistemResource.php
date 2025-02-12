@@ -2,11 +2,10 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
+use App\Filament\Resources\UserSistemResource\Pages;
+use App\Filament\Resources\UserSistemResource\RelationManagers;
 use App\Models\User;
 use App\Models\Empleado;
-use App\Models\Cliente;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -23,20 +22,20 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\SelectColumn;
 
 
-class UserResource extends Resource
+class UserSistemResource extends Resource
 {
     protected static ?string $model = User::class;
 
     
     protected static ?string $navigationIcon = 'heroicon-o-user-circle';
-    protected static ?string $navigationLabel = 'Usuarios';
-    protected static ?string $modelLabel = 'Usuario';
-    protected static ?string $pluralModelLabel = 'Usuarios';
+    protected static ?string $navigationLabel = 'Usuarios de Empleados';
+    protected static ?string $modelLabel = 'Usuario de empleado';
+    protected static ?string $pluralModelLabel = 'Usuarios de Empleados';
     protected static ?string $navigationGroup = 'Seguridad';
     // Aquí defines el orden
     public static function getNavigationSort(): ?int
     {
-        return 0; // Irá primero
+        return 1; // Irá primero
     }
 
     public static function form(Form $form): Form
@@ -67,13 +66,7 @@ class UserResource extends Resource
                 }),
                 //->required(),
 
-            Select::make('cliente_id')
-                ->label('Seleccione un Cliente')
-                ->relationship('cliente', 'nombre_completo') // Relación con el modelo Cliente
-                ->searchable()
-                ->preload()
-                ->live() ,// Hace que el campo sea reactivo
-                    //->required(),
+
 
             TextInput::make('name')
                 ->label('Usuario')
@@ -112,19 +105,19 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+        ->modifyQueryUsing(function (Builder $query) {
+            $query->whereHas('empleado', function ($q) {
+                $q->whereNotNull('nombre')->where('nombre', '!=', '');
+            });
+        })
             ->columns([
-                TextColumn::make('id')
-                ->label('ID')
-                ->sortable()
-                ->searchable(),
+                TextColumn::make('row_number')
+                ->label('N°')
+                ->rowIndex()
+                ->sortable(),
 
             TextColumn::make('empleado.nombre')
                 ->label('Empleado')
-                ->sortable()
-                ->searchable(),
-
-            TextColumn::make('cliente.nombre_completo')
-                ->label('Cliente')
                 ->sortable()
                 ->searchable(),
 
@@ -173,9 +166,9 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'index' => Pages\ListUserSistems::route('/'),
+            'create' => Pages\CreateUserSistem::route('/create'),
+            'edit' => Pages\EditUserSistem::route('/{record}/edit'),
         ];
     }
 }
