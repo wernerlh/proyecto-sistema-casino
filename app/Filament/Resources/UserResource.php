@@ -39,75 +39,6 @@ class UserResource extends Resource
         return 0; // Irá primero
     }
 
-    public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Select::make('empleado_id')
-                ->label('Seleccione un Empleado')
-                ->relationship('empleado', 'nombre_completo') // Relación con el modelo Empleado
-                ->searchable()
-                ->preload()
-                ->live() // Hace que el campo sea reactivo
-                ->afterStateUpdated(function ($state, Forms\Set $set) {
-                    // Obtiene el DNI del empleado seleccionado
-                    $empleado = Empleado::find($state);
-                    if ($empleado) {
-                    // Genera el valor para el campo 'name'
-                    $nombreCompleto = $empleado->nombre_completo; // Nombre completo (nombre + apellido)
-                    $nombreSinEspacios = str_replace(' ', '', $nombreCompleto); // Elimina espacios del nombre completo
-                    $anioNacimiento = date('Y', strtotime($empleado->fecha_nacimiento)); // Obtiene el año de nacimiento
-                    $name = strtolower($nombreSinEspacios . $anioNacimiento); // Concatena y convierte a minúsculas
-
-                    $set('name', $name); // Actualiza el campo name
-
-                    $set('dni_empleado', $empleado->documento_identidad); // Actualiza el campo DNI
-                    $set('email', $empleado->correo); // Actualiza el campo email
-                    }
-                }),
-                //->required(),
-
-            Select::make('cliente_id')
-                ->label('Seleccione un Cliente')
-                ->relationship('cliente', 'nombre_completo') // Relación con el modelo Cliente
-                ->searchable()
-                ->preload()
-                ->live() ,// Hace que el campo sea reactivo
-                    //->required(),
-
-            TextInput::make('name')
-                ->label('Usuario')
-                ->required()
-                ->maxLength(100),
-
-            TextInput::make('email')
-                ->label('Correo Electrónico')
-                ->email()
-                ->required()
-                ->maxLength(100),
-
-            // Campo para mostrar el DNI del empleado (deshabilitado)
-            TextInput::make('dni_empleado')
-            ->label('DNI del Empleado')
-            ->disabled() // Deshabilita el campo
-            ->dehydrated(false), // No guarda este campo en la base de datos
-
-            TextInput::make('password')
-            ->label('Contraseña')
-            ->password()
-            ->required()
-            ->dehydrateStateUsing(fn ($state) => Hash::make($state)), // Encripta la contraseña
-
-            // Using Select Component
-            Forms\Components\Select::make('roles')
-            ->relationship('roles', 'name')
-            ->multiple()
-            ->preload()
-            ->searchable()
-
-
-            ]);
-    }
 
     public static function table(Table $table): Table
     {
@@ -154,7 +85,6 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -174,8 +104,7 @@ class UserResource extends Resource
     {
         return [
             'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            // No incluyas 'create' ni 'edit'
         ];
     }
 }
