@@ -60,7 +60,7 @@ class ScPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                \App\Http\Middleware\CheckAdminRole::class,
+                \App\Http\Middleware\CheckRole::class,
 
             ])
             ->authMiddleware([

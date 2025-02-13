@@ -83,7 +83,9 @@ return [
          'guards' => [
             'web',
             'auth:accounts',
-            'panel:sc'
+            'panel:usuario',
+            'panel:sc',
+            'panel:seguridad',
         ],
 
         /*

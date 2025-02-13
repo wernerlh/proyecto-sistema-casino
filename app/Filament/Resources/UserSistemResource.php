@@ -44,7 +44,7 @@ class UserSistemResource extends Resource
             ->schema([
                 Select::make('empleado_id')
                 ->label('Seleccione un Empleado')
-                ->relationship('empleado', 'nombre') // Relación con el modelo Empleado
+                ->relationship('empleado', 'nombre_completo') // Relación con el modelo Empleado
                 ->searchable()
                 ->preload()
                 ->live() // Hace que el campo sea reactivo
@@ -53,7 +53,7 @@ class UserSistemResource extends Resource
                     $empleado = Empleado::find($state);
                     if ($empleado) {
                     // Genera el valor para el campo 'name'
-                    $nombreCompleto = $empleado->nombre . $empleado->apellido; // Nombre completo (nombre + apellido)
+                    $nombreCompleto = $empleado->nombre_completo; // Nombre completo (nombre + apellido)
                     $nombreSinEspacios = str_replace(' ', '', $nombreCompleto); // Elimina espacios del nombre completo
                     $anioNacimiento = date('Y', strtotime($empleado->fecha_nacimiento)); // Obtiene el año de nacimiento
                     $name = strtolower($nombreSinEspacios . $anioNacimiento); // Concatena y convierte a minúsculas
@@ -107,7 +107,7 @@ class UserSistemResource extends Resource
         return $table
         ->modifyQueryUsing(function (Builder $query) {
             $query->whereHas('empleado', function ($q) {
-                $q->whereNotNull('nombre')->where('nombre', '!=', '');
+                $q->whereNotNull('nombre_completo')->where('nombre_completo', '!=', '');
             });
         })
             ->columns([
@@ -116,7 +116,7 @@ class UserSistemResource extends Resource
                 ->rowIndex()
                 ->sortable(),
 
-            TextColumn::make('empleado.nombre')
+            TextColumn::make('empleado.nombre_completo')
                 ->label('Empleado')
                 ->sortable()
                 ->searchable(),

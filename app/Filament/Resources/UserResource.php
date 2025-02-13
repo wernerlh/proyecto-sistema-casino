@@ -45,7 +45,7 @@ class UserResource extends Resource
             ->schema([
                 Select::make('empleado_id')
                 ->label('Seleccione un Empleado')
-                ->relationship('empleado', 'nombre') // Relación con el modelo Empleado
+                ->relationship('empleado', 'nombre_completo') // Relación con el modelo Empleado
                 ->searchable()
                 ->preload()
                 ->live() // Hace que el campo sea reactivo
@@ -54,7 +54,7 @@ class UserResource extends Resource
                     $empleado = Empleado::find($state);
                     if ($empleado) {
                     // Genera el valor para el campo 'name'
-                    $nombreCompleto = $empleado->nombre . $empleado->apellido; // Nombre completo (nombre + apellido)
+                    $nombreCompleto = $empleado->nombre_completo; // Nombre completo (nombre + apellido)
                     $nombreSinEspacios = str_replace(' ', '', $nombreCompleto); // Elimina espacios del nombre completo
                     $anioNacimiento = date('Y', strtotime($empleado->fecha_nacimiento)); // Obtiene el año de nacimiento
                     $name = strtolower($nombreSinEspacios . $anioNacimiento); // Concatena y convierte a minúsculas
@@ -118,7 +118,7 @@ class UserResource extends Resource
                 ->sortable()
                 ->searchable(),
 
-            TextColumn::make('empleado.nombre')
+            TextColumn::make('empleado.nombre_completo')
                 ->label('Empleado')
                 ->sortable()
                 ->searchable(),

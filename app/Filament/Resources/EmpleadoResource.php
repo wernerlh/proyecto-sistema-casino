@@ -36,7 +36,7 @@ class EmpleadoResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('nombre')
+                TextInput::make('nombre_completo')
                     ->label('Nombre y apellido')
                     ->required()
                     ->maxLength(100),
@@ -96,7 +96,7 @@ class EmpleadoResource extends Resource
 
                 Select::make('supervisor_id')
                     ->label('Supervisor')
-                    ->relationship('supervisor', 'nombre') // Relación con el mismo modelo Empleado
+                    ->relationship('supervisor', 'nombre_completo') // Relación con el mismo modelo Empleado
                     ->searchable()
                     ->preload(),
             ]);
@@ -112,7 +112,7 @@ class EmpleadoResource extends Resource
                     ->sortable()
                     ->searchable(),
 
-                TextColumn::make('nombre')
+                TextColumn::make('nombre_completo')
                     ->label('Nombre')
                     ->sortable()
                     ->searchable(),
@@ -143,7 +143,7 @@ class EmpleadoResource extends Resource
                     ->money('S/.') // Formato de moneda
                     ->sortable(),
 
-                TextColumn::make('supervisor.nombre')
+                TextColumn::make('supervisor.nombre_completo')
                     ->label('Supervisor')
                     ->sortable(),
             ])

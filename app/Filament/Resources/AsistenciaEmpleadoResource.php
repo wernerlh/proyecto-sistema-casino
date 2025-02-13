@@ -37,7 +37,7 @@ class AsistenciaEmpleadoResource extends Resource
             ->schema([
                 Select::make('empleado_id')
                     ->label('Empleado')
-                    ->relationship('empleado', 'nombre') // Relación con el modelo Empleado
+                    ->relationship('empleado', 'nombre_completo') // Relación con el modelo Empleado
                     ->searchable()
                     ->preload()
                     ->required(),
@@ -96,7 +96,7 @@ class AsistenciaEmpleadoResource extends Resource
                     ->sortable()
                     ->searchable(),
 
-                TextColumn::make('empleado.nombre')
+                TextColumn::make('empleado.nombre_completo')
                     ->label('Empleado')
                     ->sortable()
                     ->searchable(),
@@ -134,7 +134,7 @@ class AsistenciaEmpleadoResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('empleado_id')
                     ->label('Empleado')
-                    ->relationship('empleado', 'nombre')
+                    ->relationship('empleado', 'nombre_completo')
                     ->searchable()
                     ->preload(),
 

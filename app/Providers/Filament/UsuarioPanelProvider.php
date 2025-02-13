@@ -26,8 +26,6 @@ class UsuarioPanelProvider extends PanelProvider
             ->id('usuario')
             ->path('usuario')
             ->login()
-            ->authGuard('web') // Usa el guard 'web'
-            ->authPasswordBroker('users') // Usa el proveedor 'users'
             ->colors([
                 'primary' => Color::Green
             ])
@@ -51,6 +49,7 @@ class UsuarioPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                \App\Http\Middleware\CheckUsuario::class,
             ])
             ->authMiddleware([
                 Authenticate::class,

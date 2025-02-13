@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckAdminRole
+class CheckUsuario
 {
     /**
      * Handle an incoming request.
@@ -15,28 +15,26 @@ class CheckAdminRole
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Si el usuario no está autenticado, redirigir al login (excepto para la ruta de login)
         if (auth()->check()) {
             $user = auth()->user();
 
-            // Si el usuario es "user", solo puede entrar a /usuario
-            if ($user->hasRole('panel_user') && !$request->is('usuario')) {
-                return redirect('/usuario');
+            // Si el usuario no tiene un cliente_id asociado, redirigir a error
+            if (!$user->cliente_id) {
+                return response()->view('errors.custom-error', [], 403); // Redirige a la vista personalizada
             }
 
-            // Si el usuario intenta entrar a /seguridad pero no es super_admin, redirigir a página de error
-            if ($request->is('seguridad') && !$user->hasRole('super_admin')) {
-                return redirect('/error');
-            }
+            // Permitir continuar con la solicitud si todo está bien
 
             return $next($request);
         }
 
         // Evitar bucles de redirección en la página de login
-        if ($request->is('sc/login')) {
+        if ($request->is('usuario/login')) {
             return $next($request);
         }
 
-        return redirect('/sc/login'); // Redirigir al login si no está autenticado
+        return redirect('/usuario/login'); // Redirigir al login si no está autenticado
     }
     
 }

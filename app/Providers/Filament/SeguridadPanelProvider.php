@@ -17,17 +17,12 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Illuminate\Support\Facades\Gate; // Importar la clase Gate
+
 
 class SeguridadPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-
-        // Verificar si el usuario tiene el rol de super_admin
-        Gate::define('access-seguridad-panel', function ($user) {
-            return $user->hasRole('super_admin');
-        });
 
         return $panel
             ->id('seguridad')
@@ -56,7 +51,7 @@ class SeguridadPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                \App\Http\Middleware\CheckAdminRole::class,
+                \App\Http\Middleware\CheckRole::class,
             ])
             ->authMiddleware([
                 Authenticate::class,
